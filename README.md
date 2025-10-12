@@ -5,7 +5,8 @@ A simple web-based countdown timer app that lets users set a time and watch the 
 
 ## 🧠 Features
 - User can set custom countdown time
-- ad mutipal name wiith countdown
+- ad name and start countdown
+- ad mutipal name with countdown
 - Real-time updating display
 - Clean responsive design
 - Optional Python backend support

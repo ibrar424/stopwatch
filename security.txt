@@ -1,3 +1,0 @@
-Contact: mailto:y.info@sparkdigi.online
-Preferred-Languages: en
-Canonical: https://www.stopwatch.name/.well-known/security.txt

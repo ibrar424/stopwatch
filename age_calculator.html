@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="age_calculator.css">
+</head>
+<body>
+<nav class="main-nav">
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="age_calculator.html">Age Calculator</a>
+    </div>
+    <button id="theme-toggle-btn">Light Mode</button>
+</nav>
+
+<div class="age-calculator-container">
+    <div class="age-calculator">
+        <h2>Age Calculator</h2>
+        <div class="input-group">
+            <label for="birth-date">Start Date (Birth Date)</label>
+            <input type="text" id="birth-date" placeholder="mm/dd/yyyy">
+        </div>
+        <div class="input-group">
+            <label for="current-date">End Date (Current Date)</label>
+            <input type="text" id="current-date">
+        </div>
+        <button id="calculate-btn">Calculate Age</button>
+        <div id="result">Your result will appear here</div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="theme.js"></script>
+<script src="age_calculator.js"></script>
+</body>
+</html>

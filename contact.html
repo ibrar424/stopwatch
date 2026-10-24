@@ -3,35 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us - Countdown Timer</title>
+    <meta name="description" content="Contact Stopwatch.name for support, feedback, or business inquiries.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⏰</text></svg>">
+    <title>Contact Us - Stopwatch.name</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav style="padding: 20px; background: #2d2d2d;">
-        <a href="index.html" style="color: #00aaff; margin-right: 20px;">Home</a>
-        <a href="age_calculator.html" style="color: #00aaff;">Age Calculator</a>
+    <nav class="main-nav">
+        <a href="index.html" class="nav-brand">
+            <span id="logo-icon">⏰</span>
+            <span>Stopwatch.name</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html">Timer &amp; Stopwatch</a>
+            <a href="age_calculator.html">Age Calculator</a>
+            <a href="about.html">About</a>
+        </div>
+        <button id="theme-toggle-btn" type="button" aria-label="Toggle color theme">☀️ Light Mode</button>
     </nav>
-    <div style="max-width: 800px; margin: 50px auto; padding: 20px; background: #2d2d2d; border-radius: 15px;">
-        <h1>Contact Us</h1>
-        <p>Have questions, suggestions, or feedback about our countdown timer? We'd love to hear from you!</p>
-        
-        <h2>Get in Touch</h2>
-        <p><strong>Email:</strong> contact@stopwatch.name</p>
-        <p><strong>Website:</strong> https://www.stopwatch.name</p>
-        
-        <h2>Business Inquiries</h2>
-        <p>For partnership or advertising inquiries, please email us at: business@stopwatch.name</p>
-        
-        <h2>Support</h2>
-        <p>If you're experiencing technical issues with our timer, please include:</p>
-        <ul>
-            <li>Your browser name and version</li>
-            <li>Device type (desktop, mobile, tablet)</li>
-            <li>Description of the issue</li>
-            <li>Steps to reproduce the problem</li>
-        </ul>
-        
-        <p>We typically respond within 24-48 hours.</p>
-    </div>
+
+    <main class="main-content">
+        <article class="content-card">
+            <h1>Contact Us</h1>
+            <p>Have questions, suggestions, or feedback about our countdown timer and stopwatch suite? We'd love to hear from you!</p>
+
+            <h2>Get in Touch</h2>
+            <p><strong>Email:</strong> <a href="mailto:contact@stopwatch.name">contact@stopwatch.name</a></p>
+            <p><strong>Website:</strong> <a href="https://www.stopwatch.name">https://www.stopwatch.name</a></p>
+
+            <h2>Business Inquiries</h2>
+            <p>For partnership or advertising inquiries, please email us at: <a href="mailto:business@stopwatch.name">business@stopwatch.name</a></p>
+
+            <h2>Technical Support</h2>
+            <p>If you're experiencing technical issues with our timer, please include:</p>
+            <ul>
+                <li>Your browser name and version</li>
+                <li>Device type (desktop, mobile, tablet)</li>
+                <li>Description of the issue</li>
+                <li>Steps to reproduce the problem</li>
+            </ul>
+
+            <p>We typically respond within 24–48 hours.</p>
+        </article>
+    </main>
+
+    <footer class="main-footer">
+        <p>
+            <a href="index.html">Home</a>
+            <a href="age_calculator.html">Age Calculator</a>
+            <a href="about.html">About</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="contact.html">Contact</a>
+            <a href="terms.html">Terms</a>
+        </p>
+        <p>© 2026 Stopwatch.name. All rights reserved.</p>
+    </footer>
+
+    <script src="theme.js"></script>
 </body>
 </html>

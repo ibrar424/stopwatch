@@ -3,38 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Age Calculator</title>
+    <meta name="description" content="Calculate your exact age in years, months, weeks, days, and hours with next birthday countdown.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
+    <title>Age Calculator - Stopwatch.name</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="age_calculator.css">
 </head>
 <body>
-<nav class="main-nav">
-    <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="age_calculator.html">Age Calculator</a>
-    </div>
-    <button id="theme-toggle-btn">Light Mode</button>
-</nav>
-
-<div class="age-calculator-container">
-    <div class="age-calculator">
-        <h2>Age Calculator</h2>
-        <div class="input-group">
-            <label for="birth-date">Start Date (Birth Date)</label>
-            <input type="text" id="birth-date" placeholder="mm/dd/yyyy">
+    <nav class="main-nav">
+        <a href="index.html" class="nav-brand">
+            <span id="logo-icon">⏰</span>
+            <span>Stopwatch.name</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html">Timer &amp; Stopwatch</a>
+            <a href="age_calculator.html" class="active">Age Calculator</a>
+            <a href="about.html">About</a>
         </div>
-        <div class="input-group">
-            <label for="current-date">End Date (Current Date)</label>
-            <input type="text" id="current-date">
-        </div>
-        <button id="calculate-btn">Calculate Age</button>
-        <div id="result">Your result will appear here</div>
-    </div>
-</div>
+        <button id="theme-toggle-btn" type="button" aria-label="Toggle color theme">☀️ Light Mode</button>
+    </nav>
 
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="theme.js"></script>
-<script src="age_calculator.js"></script>
+    <main class="main-content">
+        <div class="age-calculator-container">
+            <div class="age-calculator">
+                <h1>🎂 Age Calculator</h1>
+                <p class="subtitle">Discover your exact chronological age down to the day and hour.</p>
+
+                <div class="date-inputs-grid">
+                    <div class="input-group">
+                        <label for="birth-date">Birth Date (Start Date)</label>
+                        <input type="text" id="birth-date" placeholder="MM/DD/YYYY" autocomplete="off">
+                    </div>
+                    <div class="input-group">
+                        <label for="current-date">Target Date (Current Date)</label>
+                        <input type="text" id="current-date" placeholder="MM/DD/YYYY" autocomplete="off">
+                    </div>
+                </div>
+
+                <button type="button" id="calculate-btn">✨ Calculate Exact Age</button>
+
+                <div id="result" aria-live="polite">Your detailed age breakdown will appear here.</div>
+
+                <div id="age-stats-grid" class="age-stats-grid hidden">
+                    <div class="stat-box">
+                        <span class="stat-value" id="stat-months">0</span>
+                        <span class="stat-label">Total Months</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-value" id="stat-weeks">0</span>
+                        <span class="stat-label">Total Weeks</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-value" id="stat-days">0</span>
+                        <span class="stat-label">Total Days</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-value" id="stat-next-bday">-</span>
+                        <span class="stat-label">Next Birthday</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <p>
+            <a href="index.html">Home</a>
+            <a href="age_calculator.html">Age Calculator</a>
+            <a href="about.html">About</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="contact.html">Contact</a>
+            <a href="terms.html">Terms</a>
+        </p>
+        <p>© 2026 Stopwatch.name. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="theme.js"></script>
+    <script src="age_calculator.js"></script>
 </body>
 </html>

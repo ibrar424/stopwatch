@@ -3,69 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A simple and elegant countdown timer to help you track your events and tasks.">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <title>Countdown Timer</title>
+    <meta name="description" content="A modern, precision countdown timer and stopwatch with lap tracking, custom presets, and PDF export.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⏰</text></svg>">
+    <title>Countdown Pro &amp; Stopwatch</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
     <meta name="google-site-verification" content="4BcSuDNwoFCV7XPOH_7LfuYWbUG6-D7faK6I3-elNnc" />
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Countdown Pro & Stopwatch",
+      "url": "https://www.stopwatch.name/",
+      "description": "Free online countdown timer and stopwatch with pause, resume, lap tracking, and PDF export features",
+      "applicationCategory": "Utility",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "browserRequirements": "Requires JavaScript. Works on all modern browsers."
+    }
+    </script>
 </head>
 <body>
-<nav class="main-nav">
-    <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="age_calculator.html">Age Calculator</a>
-    </div>
-    <button id="theme-toggle-btn">Light Mode</button>
-</nav>
+    <nav class="main-nav">
+        <a href="index.html" class="nav-brand">
+            <span id="logo-icon">⏰</span>
+            <span>Countdown Pro</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html" class="active">Home</a>
+            <a href="age_calculator.html">Age Calculator</a>
+            <a href="about.html">About</a>
+        </div>
+        <button id="theme-toggle-btn" type="button" aria-label="Toggle color theme">☀️ Light Mode</button>
+    </nav>
 
+    <main class="main-content">
+        <div class="workspace-stack">
+            <!-- Primary Timer / Stopwatch Card -->
+            <section class="timer-container" aria-label="Timer Controls">
+                <div class="mode-tabs" role="tablist">
+                    <button type="button" class="mode-tab active" id="tab-countdown" role="tab" aria-selected="true">⏳ Countdown</button>
+                    <button type="button" class="mode-tab" id="tab-stopwatch" role="tab" aria-selected="false">⏱️ Stopwatch</button>
+                </div>
 
-    <div class="timer-container">
-        <h1><span id="logo-icon">⏰</span> Countdown Pro</h1>
-        <p>Your go-to tool for tracking events, tasks, and deadlines.</p>
-        <h3 id="current-timer-title"></h3>
-        <div class="input-container">
-            <div class="inputs">
-                <input type="text" id="title-input" placeholder="Enter name">
-                <input type="number" id="time-input" placeholder="Enter time">
-                <select id="time-unit">
-                    <option value="seconds">Seconds</option>
-                    <option value="minutes">Minutes</option>
-                    <option value="hours">Hours</option>
-                </select>
-            </div>
-            <div class="buttons">
-                <button id="start-btn">Start</button>
-                <button id="pause-btn">Pause</button>
-                <button id="stop-btn">Stop</button>
-            </div>
+                <!-- Countdown Mode View -->
+                <div id="countdown-panel">
+                    <h1>⏰ Countdown Pro</h1>
+                    <p class="subtitle">Your go-to tool for tracking events, tasks, and deadlines.</p>
+
+                    <div class="presets-row" aria-label="Quick time presets">
+                        <button type="button" class="preset-chip" data-seconds="60" data-label="1 Min Quick">+ 1m</button>
+                        <button type="button" class="preset-chip" data-seconds="300" data-label="5 Min Break">+ 5m</button>
+                        <button type="button" class="preset-chip" data-seconds="600" data-label="10 Min Task">+ 10m</button>
+                        <button type="button" class="preset-chip" data-seconds="1500" data-label="Pomodoro (25m)">🍅 25m</button>
+                        <button type="button" class="preset-chip" data-seconds="3600" data-label="1 Hour Deep Work">+ 1h</button>
+                    </div>
+
+                    <div class="input-container">
+                        <div class="inputs">
+                            <input type="text" id="title-input" placeholder="Enter name" aria-label="Timer name">
+                            <input type="number" id="time-input" placeholder="Enter time" min="1" aria-label="Timer duration">
+                            <select id="time-unit" aria-label="Time unit">
+                                <option value="seconds" selected>Seconds</option>
+                                <option value="minutes">Minutes</option>
+                                <option value="hours">Hours</option>
+                            </select>
+                        </div>
+
+                        <div class="buttons">
+                            <button type="button" id="start-btn">▶ Start</button>
+                            <button type="button" id="pause-btn">⏸ Pause</button>
+                            <button type="button" id="stop-btn">⏹ Stop</button>
+                        </div>
+                    </div>
+
+                    <h3 id="current-timer-title"></h3>
+
+                    <div class="display-container">
+                        <h2 id="timer-display">00:00:00</h2>
+                        <div id="timer-status" class="timer-status-badge">Ready to start</div>
+                        <div class="progress-bar-track">
+                            <div id="timer-progress" class="progress-bar-fill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stopwatch Mode View -->
+                <div id="stopwatch-panel" class="hidden">
+                    <h1>⏱️ Precision Stopwatch</h1>
+                    <p class="subtitle">Measure elapsed time and record split laps down to the centisecond.</p>
+
+                    <div class="buttons sw-buttons">
+                        <button type="button" id="sw-start-btn">▶ Start</button>
+                        <button type="button" id="sw-lap-btn">🏁 Lap</button>
+                        <button type="button" id="sw-reset-btn">⏹ Reset</button>
+                    </div>
+
+                    <div class="display-container">
+                        <h2 id="stopwatch-display">00:00:00<span id="stopwatch-ms" class="ms-display">.00</span></h2>
+                        <div id="stopwatch-status" class="timer-status-badge">Stopwatch Ready</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Saved Timers Card -->
+            <section class="saved-timers-container" aria-label="Saved Timers History">
+                <div class="saved-timers-header">
+                    <h2>Saved Timers</h2>
+                    <div class="header-actions">
+                        <button type="button" id="download-btn" title="Download as PDF" aria-label="Download Saved Timers as PDF">
+                            <svg class="download-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            <span>Download PDF</span>
+                        </button>
+                        <button type="button" id="mute-btn">🔔 Mute</button>
+                        <button type="button" id="clear-btn">🗑 Clear All</button>
+                    </div>
+                </div>
+                <ul id="saved-timers-list"></ul>
+            </section>
         </div>
-        <div class="display-container">
-            <h2 id="timer-display">00:00:00</h2>
-        </div>
-    </div>
-    <div class="saved-timers-container">
-    <div class="saved-timers-header">
-        <h2>Saved Timers <span id="download-btn" title="Download as PDF">&#x2913;</span></h2>
-        <div>
-            <button id="mute-btn">Mute</button>
-            <button id="clear-btn">Clear All</button>
-        </div>
-    </div>
-        <ul id="saved-timers-list"></ul>
-    </div>
-    <audio id="notification-sound" src="notification.mp3"></audio>
-    <script src="script.js"></script>
+    </main>
+
+    <div id="toast" class="toast-notification" role="status" aria-live="polite"></div>
+    <audio id="notification-sound" src="notification.mp3" preload="auto"></audio>
+
+    <footer class="main-footer">
+        <p>
+            <a href="index.html">Home</a>
+            <a href="age_calculator.html">Age Calculator</a>
+            <a href="about.html">About</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="contact.html">Contact</a>
+            <a href="terms.html">Terms</a>
+        </p>
+        <p>© 2026 Stopwatch.name. All rights reserved.</p>
+    </footer>
+
     <script src="theme.js"></script>
+    <script src="script.js"></script>
 </body>
-<footer class="main-footer">
-    <p>
-        <a href="about.html">About</a> |
-        <a href="privacy.html">Privacy Policy</a> |
-        <a href="contact.html">Contact</a> |
-        <a href="terms.html">Terms</a>
-    </p>
-    <p>© 2025 Stopwatch.name. All rights reserved.</p>
-</footer>
 </html>
-

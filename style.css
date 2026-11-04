@@ -1,47 +1,52 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap');
 
 :root {
-    --bg-primary: #0f1117;
-    --bg-secondary: #161922;
-    --surface-card: #1c202b;
-    --surface-elevated: #262b3a;
-    --surface-input: #252a37;
-    --border-subtle: rgba(255, 255, 255, 0.1);
-    --border-focus: #0ea5e9;
-    --text-primary: #f8fafc;
-    --text-secondary: #cbd5e1;
+    /* Modern Glassmorphism Dark Theme Tokens */
+    --bg-primary: #070b19;
+    --bg-secondary: #0f172a;
+    --surface-card: rgba(25, 35, 58, 0.48);
+    --surface-elevated: rgba(255, 255, 255, 0.08);
+    --surface-input: rgba(10, 16, 32, 0.55);
+    --border-subtle: rgba(255, 255, 255, 0.16);
+    --border-highlight: rgba(255, 255, 255, 0.28);
+    --border-focus: #38bdf8;
+    --glass-blur: blur(22px) saturate(180%);
+    --text-primary: #ffffff;
+    --text-secondary: #e2e8f0;
     --text-muted: #94a3b8;
     --accent-primary: #0ea5e9;
     --accent-hover: #0284c7;
-    --accent-gradient: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
-    --btn-start: #007bff;
-    --btn-start-hover: #0062cc;
-    --btn-pause: #f59e0b;
-    --btn-pause-hover: #d97706;
-    --btn-stop: #ef4444;
-    --btn-stop-hover: #dc2626;
-    --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.45);
-    --radius-xl: 20px;
-    --radius-lg: 14px;
+    --accent-gradient: linear-gradient(135deg, #38bdf8 0%, #6366f1 55%, #ec4899 100%);
+    --btn-start: linear-gradient(135deg, rgba(14, 165, 233, 0.9) 0%, rgba(59, 130, 246, 0.9) 100%);
+    --btn-start-hover: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+    --btn-pause: linear-gradient(135deg, rgba(245, 158, 11, 0.92) 0%, rgba(217, 119, 6, 0.92) 100%);
+    --btn-pause-hover: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    --btn-stop: linear-gradient(135deg, rgba(239, 68, 68, 0.9) 0%, rgba(225, 29, 72, 0.9) 100%);
+    --btn-stop-hover: linear-gradient(135deg, #dc2626 0%, #be123c 100%);
+    --shadow-lg: 0 24px 54px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.22);
+    --radius-xl: 22px;
+    --radius-lg: 16px;
     --radius-md: 10px;
     --radius-sm: 8px;
-    --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body.light-mode {
-    --bg-primary: #f1f5f9;
-    --bg-secondary: #e2e8f0;
-    --surface-card: #ffffff;
-    --surface-elevated: #f1f5f9;
-    --surface-input: #f8fafc;
-    --border-subtle: #cbd5e1;
+    /* Modern Glassmorphism Light Theme Tokens */
+    --bg-primary: #e0f2fe;
+    --bg-secondary: #f0f9ff;
+    --surface-card: rgba(255, 255, 255, 0.62);
+    --surface-elevated: rgba(255, 255, 255, 0.78);
+    --surface-input: rgba(255, 255, 255, 0.72);
+    --border-subtle: rgba(255, 255, 255, 0.75);
+    --border-highlight: rgba(14, 165, 233, 0.35);
     --border-focus: #0284c7;
     --text-primary: #0f172a;
-    --text-secondary: #334155;
-    --text-muted: #64748b;
+    --text-secondary: #1e293b;
+    --text-muted: #475569;
     --accent-primary: #0284c7;
     --accent-hover: #0369a1;
-    --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.08);
+    --shadow-lg: 0 20px 45px rgba(15, 23, 42, 0.1), inset 0 1px 2px rgba(255, 255, 255, 0.95);
 }
 
 *,
@@ -60,27 +65,31 @@ body {
     margin: 0;
     background-color: var(--bg-primary);
     background-image:
-        radial-gradient(at 15% 10%, rgba(14, 165, 233, 0.1) 0px, transparent 45%),
-        radial-gradient(at 85% 85%, rgba(59, 130, 246, 0.08) 0px, transparent 45%);
+        radial-gradient(circle at 12% 18%, rgba(56, 189, 248, 0.35) 0%, transparent 42%),
+        radial-gradient(circle at 88% 22%, rgba(139, 92, 246, 0.32) 0%, transparent 45%),
+        radial-gradient(circle at 50% 88%, rgba(236, 72, 153, 0.25) 0%, transparent 48%);
+    background-attachment: fixed;
     color: var(--text-primary);
     transition: background-color var(--transition), color var(--transition);
     overflow-x: hidden;
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Navigation Bar */
+/* Frosted Glass Navigation Bar */
 .main-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 14px 32px;
     background: var(--surface-card);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
     border-bottom: 1px solid var(--border-subtle);
     width: 100%;
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.22);
 }
 
 .nav-brand {
@@ -97,22 +106,27 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
+    background: var(--surface-input);
+    padding: 4px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
 }
 
 .nav-links a {
-    color: var(--accent-primary);
-    padding: 8px 16px;
-    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    padding: 7px 16px;
+    border-radius: var(--radius-sm);
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     transition: all var(--transition);
 }
 
 .nav-links a:hover,
 .nav-links a.active {
     background: var(--surface-elevated);
-    color: var(--text-primary);
+    color: var(--border-focus);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 #theme-toggle-btn {
@@ -123,17 +137,18 @@ body {
     height: 40px;
     padding: 0 18px;
     border-radius: var(--radius-md);
-    border: none;
-    background: var(--accent-primary);
+    border: 1px solid var(--border-highlight);
+    background: var(--btn-start);
     color: #ffffff;
     font-size: 0.92rem;
     font-weight: 600;
     cursor: pointer;
+    box-shadow: 0 4px 15px rgba(14, 165, 233, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3);
     transition: all var(--transition);
 }
 
 #theme-toggle-btn:hover {
-    background: var(--accent-hover);
+    background: var(--btn-start-hover);
     transform: translateY(-1px);
 }
 
@@ -155,16 +170,19 @@ body {
     width: 100%;
 }
 
-/* Card Containers */
+/* Frosted Glassmorphism Card Containers */
 .timer-container,
 .saved-timers-container,
 .content-card {
     background: var(--surface-card);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
     padding: 36px 32px;
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-lg);
     width: 100%;
     border: 1px solid var(--border-subtle);
+    border-top: 1px solid var(--border-highlight);
     transition: all var(--transition);
 }
 
@@ -202,15 +220,17 @@ body {
 }
 
 .content-card a {
-    color: var(--accent-primary);
+    color: var(--border-focus);
     text-decoration: none;
     font-weight: 500;
 }
 
-/* Mode Switcher Tabs */
+/* Mode Switcher Glass Tabs */
 .mode-tabs {
     display: inline-flex;
     background: var(--surface-input);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     padding: 4px;
     border-radius: var(--radius-md);
     border: 1px solid var(--border-subtle);
@@ -231,8 +251,9 @@ body {
 }
 
 .mode-tab.active {
-    background: var(--accent-primary);
+    background: var(--btn-start);
     color: #ffffff;
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 h1 {
@@ -241,6 +262,7 @@ h1 {
     font-weight: 800;
     color: var(--text-primary);
     letter-spacing: -0.02em;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
 }
 
 .subtitle {
@@ -249,7 +271,7 @@ h1 {
     font-size: 0.98rem;
 }
 
-/* Quick Presets */
+/* Quick Glass Presets */
 .presets-row {
     display: flex;
     flex-wrap: wrap;
@@ -264,20 +286,24 @@ h1 {
     border-radius: 999px;
     border: 1px solid var(--border-subtle);
     background: var(--surface-elevated);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     color: var(--text-secondary);
     font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
     transition: all var(--transition);
 }
 
 .preset-chip:hover {
-    border-color: var(--accent-primary);
+    border-color: var(--border-focus);
     color: var(--text-primary);
-    background: rgba(14, 165, 233, 0.15);
+    background: rgba(56, 189, 248, 0.2);
+    transform: translateY(-1px);
 }
 
-/* Arranged Input Boxes */
+/* Arranged Compact Glass Input Boxes */
 .input-container {
     display: flex;
     flex-direction: column;
@@ -306,10 +332,23 @@ h1 {
     font-size: 0.9rem;
     font-family: inherit;
     background: var(--surface-input);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     color: var(--text-primary);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
     transition: border-color var(--transition), box-shadow var(--transition);
     width: 100%;
     min-width: 0;
+}
+
+#time-unit option {
+    background: #161f33;
+    color: #ffffff;
+}
+
+body.light-mode #time-unit option {
+    background: #ffffff;
+    color: #0f172a;
 }
 
 #title-input::placeholder,
@@ -323,10 +362,10 @@ h1 {
 #time-unit:focus {
     outline: none;
     border-color: var(--border-focus);
-    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.25);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.28);
 }
 
-/* Arranged Action Button Boxes */
+/* Arranged Glass Action Button Boxes */
 .buttons {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -349,7 +388,7 @@ h1 {
     height: 40px;
     padding: 0 16px;
     border-radius: var(--radius-sm);
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.22);
     font-size: 0.92rem;
     font-weight: 700;
     font-family: inherit;
@@ -366,7 +405,7 @@ h1 {
 #sw-start-btn {
     background: var(--btn-start);
     color: #ffffff;
-    box-shadow: 0 4px 14px rgba(0, 123, 255, 0.35);
+    box-shadow: 0 6px 18px rgba(14, 165, 233, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 #start-btn:hover,
@@ -378,8 +417,8 @@ h1 {
 #pause-btn,
 #sw-lap-btn {
     background: var(--btn-pause);
-    color: #111827;
-    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);
+    color: #ffffff;
+    box-shadow: 0 6px 18px rgba(245, 158, 11, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 #pause-btn:hover,
@@ -393,7 +432,7 @@ h1 {
 #sw-reset-btn {
     background: var(--btn-stop);
     color: #ffffff;
-    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+    box-shadow: 0 6px 18px rgba(239, 68, 68, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 #stop-btn:hover,
@@ -406,11 +445,11 @@ h1 {
     min-height: 24px;
     margin: 6px 0;
     font-size: 1.25rem;
-    color: var(--accent-primary);
+    color: var(--border-focus);
     font-weight: 700;
 }
 
-/* Timer Display Box */
+/* Frosted Glass Timer Display Box */
 .display-container {
     position: relative;
     display: flex;
@@ -421,7 +460,10 @@ h1 {
     padding: 28px 20px;
     border-radius: var(--radius-lg);
     background: var(--surface-input);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border-subtle);
+    box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.25);
     overflow: hidden;
 }
 
@@ -431,7 +473,7 @@ h1 {
     left: 0;
     width: 100%;
     height: 5px;
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.08);
 }
 
 .progress-bar-fill {
@@ -451,11 +493,12 @@ h1 {
     color: var(--text-primary);
     font-variant-numeric: tabular-nums;
     line-height: 1.05;
+    text-shadow: 0 0 28px rgba(56, 189, 248, 0.28);
 }
 
 .ms-display {
     font-size: 1.8rem;
-    color: var(--accent-primary);
+    color: var(--border-focus);
     margin-left: 4px;
 }
 
@@ -513,14 +556,14 @@ h1 {
 }
 
 #download-btn {
-    background: var(--accent-primary);
+    background: var(--btn-start);
     color: #ffffff;
-    border: none;
-    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 0 4px 14px rgba(14, 165, 233, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 #download-btn:hover {
-    background: var(--accent-hover);
+    background: var(--btn-start-hover);
     transform: translateY(-2px);
 }
 
@@ -530,26 +573,28 @@ h1 {
 
 #mute-btn {
     background: var(--surface-elevated);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     color: var(--text-primary);
     border: 1px solid var(--border-subtle);
 }
 
 #mute-btn:hover {
-    border-color: var(--accent-primary);
+    border-color: var(--border-focus);
     transform: translateY(-2px);
 }
 
 #mute-btn.muted {
-    background: rgba(14, 165, 233, 0.2);
-    border-color: var(--accent-primary);
-    color: var(--accent-primary);
+    background: rgba(56, 189, 248, 0.22);
+    border-color: var(--border-focus);
+    color: var(--border-focus);
 }
 
 #clear-btn {
     background: var(--btn-stop);
     color: #ffffff;
-    border: none;
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 #clear-btn:hover {
@@ -557,7 +602,7 @@ h1 {
     transform: translateY(-2px);
 }
 
-/* Saved Timers List Items */
+/* Saved Timers Glass List Items */
 #saved-timers-list {
     list-style: none;
     padding: 0;
@@ -568,12 +613,14 @@ h1 {
 
 #saved-timers-list li {
     background: var(--surface-input);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     padding: 14px 18px;
     border-radius: var(--radius-md);
     margin-bottom: 10px;
     font-size: 1rem;
     border: 1px solid var(--border-subtle);
-    border-left: 4px solid var(--accent-primary);
+    border-left: 4px solid var(--border-focus);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -582,7 +629,8 @@ h1 {
 }
 
 #saved-timers-list li:hover {
-    border-color: var(--accent-primary);
+    border-color: var(--border-focus);
+    background: var(--surface-elevated);
 }
 
 .timer-item-info {
@@ -620,8 +668,8 @@ h1 {
 
 .timer-item-delete:hover {
     color: #ef4444;
-    background: rgba(239, 68, 68, 0.12);
-    border-color: rgba(239, 68, 68, 0.25);
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.3);
 }
 
 .empty-state {
@@ -631,9 +679,10 @@ h1 {
     font-size: 0.95rem;
     border: 1px dashed var(--border-subtle);
     border-radius: var(--radius-md);
+    background: var(--surface-input);
 }
 
-/* Mobile App Install Popup Banner */
+/* Mobile App Install Glass Popup Banner */
 .install-popup {
     position: fixed;
     left: 50%;
@@ -642,10 +691,12 @@ h1 {
     width: calc(100% - 32px);
     max-width: 520px;
     background: var(--surface-card);
-    border: 1px solid var(--accent-primary);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border-highlight);
     border-radius: var(--radius-lg);
     padding: 14px 16px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.25);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -712,8 +763,8 @@ h1 {
     height: 38px;
     padding: 0 14px;
     border-radius: var(--radius-sm);
-    border: none;
-    background: var(--accent-gradient);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: var(--btn-start);
     color: #ffffff;
     font-weight: 700;
     font-size: 0.86rem;
@@ -735,7 +786,7 @@ h1 {
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-subtle);
     background: var(--surface-elevated);
-    color: var(--text-muted);
+    color: var(--text-secondary);
     font-size: 0.95rem;
     cursor: pointer;
     display: inline-flex;
@@ -746,16 +797,18 @@ h1 {
 
 .install-btn-close:hover {
     color: var(--text-primary);
-    border-color: var(--accent-primary);
+    border-color: var(--border-focus);
 }
 
-/* Toast Notification */
+/* Glass Toast Notification */
 .toast-notification {
     position: fixed;
     bottom: 88px;
     right: 24px;
     background: var(--surface-card);
-    border: 1px solid var(--accent-primary);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border-highlight);
     color: var(--text-primary);
     padding: 14px 20px;
     border-radius: var(--radius-md);
@@ -773,18 +826,20 @@ h1 {
     opacity: 1;
 }
 
-/* Footer */
+/* Frosted Glass Footer */
 .main-footer {
     text-align: center;
     padding: 28px 20px calc(28px + env(safe-area-inset-bottom, 0px));
     background: var(--surface-card);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
     border-top: 1px solid var(--border-subtle);
     width: 100%;
     margin-top: auto;
 }
 
 .main-footer a {
-    color: var(--accent-primary);
+    color: var(--border-focus);
     margin: 0 10px;
     text-decoration: none;
     font-weight: 500;
@@ -821,8 +876,6 @@ h1 {
         order: 3;
         width: 100%;
         justify-content: center;
-        border-top: 1px solid var(--border-subtle);
-        padding-top: 8px;
         gap: 4px;
     }
 
@@ -849,7 +902,7 @@ h1 {
     .saved-timers-container,
     .content-card {
         padding: 20px 16px;
-        border-radius: 16px;
+        border-radius: 18px;
     }
 
     h1 {
@@ -887,7 +940,7 @@ h1 {
     #time-input,
     #time-unit {
         height: 40px;
-        font-size: 16px; /* Prevents iOS Safari zoom on focus */
+        font-size: 16px;
     }
 
     /* Keep Start, Pause, Stop side-by-side on mobile */

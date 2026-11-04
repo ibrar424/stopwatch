@@ -28,6 +28,11 @@ const swStartBtn = document.getElementById('sw-start-btn');
 const swLapBtn = document.getElementById('sw-lap-btn');
 const swResetBtn = document.getElementById('sw-reset-btn');
 
+// Mobile App Install Popup elements
+const installPopup = document.getElementById('install-popup');
+const installAppBtn = document.getElementById('install-app-btn');
+const installDismissBtn = document.getElementById('install-dismiss-btn');
+
 let countdown = null;
 let currentTitle = 'Unnamed';
 let initialTime = 0;
@@ -35,6 +40,7 @@ let isPaused = false;
 let timeLeft = 0;
 let isMuted = false;
 let toastTimeout = null;
+let deferredInstallPrompt = null;
 
 // Stopwatch state
 let swInterval = null;
@@ -50,7 +56,7 @@ function showToast(message) {
     clearTimeout(toastTimeout);
     toastTimeout = setTimeout(() => {
         toastEl.classList.remove('show');
-    }, 3200);
+    }, 3400);
 }
 
 function playAlertSound() {
@@ -58,7 +64,6 @@ function playAlertSound() {
     if (notificationSound) {
         notificationSound.currentTime = 0;
         notificationSound.play().catch(() => {
-            // Fallback Web Audio API chime if audio file fails or autoplay blocked
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
                 const osc = ctx.createOscillator();
@@ -76,10 +81,70 @@ function playAlertSound() {
     }
 }
 
-// Load saved timers from localStorage
+// Register Service Worker & Initialize Mobile Install Popup
 document.addEventListener('DOMContentLoaded', () => {
     renderSavedTimers();
+    initPwaInstallPopup();
 });
+
+function initPwaInstallPopup() {
+    if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    const isDismissed = sessionStorage.getItem('pwaInstallDismissed') === '1';
+
+    if (isStandalone || isDismissed || !installPopup) return;
+
+    // Capture browser's native install prompt on Android / Chrome / Edge
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredInstallPrompt = e;
+        installPopup.classList.remove('hidden');
+    });
+
+    // Show popup notification after 1.5s on mobile / desktop so user can always install or add to home screen
+    setTimeout(() => {
+        if (!isStandalone && sessionStorage.getItem('pwaInstallDismissed') !== '1') {
+            installPopup.classList.remove('hidden');
+        }
+    }, 1500);
+
+    if (installAppBtn) {
+        installAppBtn.addEventListener('click', async () => {
+            if (deferredInstallPrompt) {
+                deferredInstallPrompt.prompt();
+                const { outcome } = await deferredInstallPrompt.userChoice;
+                deferredInstallPrompt = null;
+                if (outcome === 'accepted') {
+                    installPopup.classList.add('hidden');
+                    showToast('🎉 Countdown Pro App is installing!');
+                }
+            } else {
+                const ua = navigator.userAgent || '';
+                const isIOS = /iPad|iPhone|iPod/.test(ua);
+                if (isIOS) {
+                    showToast('📲 On iPhone/iPad: Tap Share (⬆️) then "Add to Home Screen" (➕).');
+                } else {
+                    showToast('📲 Open browser menu (⋮) and tap "Add to Home screen" or "Install app".');
+                }
+            }
+        });
+    }
+
+    if (installDismissBtn) {
+        installDismissBtn.addEventListener('click', () => {
+            installPopup.classList.add('hidden');
+            sessionStorage.setItem('pwaInstallDismissed', '1');
+        });
+    }
+
+    window.addEventListener('appinstalled', () => {
+        installPopup.classList.add('hidden');
+        showToast('✅ App installed successfully!');
+    });
+}
 
 function getSavedTimers() {
     try {

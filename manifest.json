@@ -1,0 +1,19 @@
+{
+  "name": "Countdown Pro & Stopwatch",
+  "short_name": "Countdown Pro",
+  "description": "Precision countdown timer, centisecond stopwatch, and chronological age calculator.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f1117",
+  "theme_color": "#0ea5e9",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

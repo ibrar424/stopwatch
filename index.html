@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="A modern, precision countdown timer and stopwatch with lap tracking, custom presets, and PDF export.">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⏰</text></svg>">
+    <meta name="theme-color" content="#0f1117">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Countdown Pro">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.svg">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
     <title>Countdown Pro &amp; Stopwatch</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
@@ -131,6 +137,21 @@
             </section>
         </div>
     </main>
+
+    <!-- Mobile App Install Popup Notification -->
+    <div id="install-popup" class="install-popup hidden" role="dialog" aria-labelledby="install-popup-title" aria-describedby="install-popup-desc">
+        <div class="install-popup-content">
+            <img src="icon.svg" alt="Countdown Pro App Icon" class="install-app-icon" width="44" height="44">
+            <div class="install-text">
+                <strong id="install-popup-title">Install Countdown Pro App</strong>
+                <span id="install-popup-desc">Add to your mobile home screen for fast, offline access.</span>
+            </div>
+        </div>
+        <div class="install-actions">
+            <button type="button" id="install-app-btn" class="install-btn-primary">📲 Install App</button>
+            <button type="button" id="install-dismiss-btn" class="install-btn-close" aria-label="Close install notification">✕</button>
+        </div>
+    </div>
 
     <div id="toast" class="toast-notification" role="status" aria-live="polite"></div>
     <audio id="notification-sound" src="notification.mp3" preload="auto"></audio>

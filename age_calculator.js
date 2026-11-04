@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (birthDate > currentDate) {
-            resultDiv.textContent = 'Birth date cannot be in the future relative to the target date.';
+            resultDiv.textContent = 'Birth date cannot be after the end date.';
             resultDiv.classList.add('error-msg');
             if (statsGrid) statsGrid.classList.add('hidden');
             return;
@@ -81,13 +81,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         resultDiv.textContent = `You are ${ageYears} years, ${ageMonths} months, and ${ageDays} days old.`;
 
-        // Compute additional statistics
         const diffMs = currentDate.getTime() - birthDate.getTime();
         const totalDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
         const totalWeeks = Math.floor(totalDays / 7);
         const totalMonths = ageYears * 12 + ageMonths;
 
-        // Next birthday calculation
         let nextBday = new Date(currentDate.getFullYear(), birthDate.getMonth(), birthDate.getDate());
         if (nextBday < currentDate) {
             nextBday = new Date(currentDate.getFullYear() + 1, birthDate.getMonth(), birthDate.getDate());
@@ -98,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
             statMonths.textContent = totalMonths.toLocaleString();
             statWeeks.textContent = totalWeeks.toLocaleString();
             statDays.textContent = totalDays.toLocaleString();
-            statNextBday.textContent = daysUntilBday === 0 ? '🎉 Today!' : `${daysUntilBday} days`;
+            statNextBday.textContent = daysUntilBday === 0 ? 'Today!' : `${daysUntilBday} days`;
             statsGrid.classList.remove('hidden');
         }
     });

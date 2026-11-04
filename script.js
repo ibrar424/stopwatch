@@ -28,6 +28,13 @@ const swStartBtn = document.getElementById('sw-start-btn');
 const swLapBtn = document.getElementById('sw-lap-btn');
 const swResetBtn = document.getElementById('sw-reset-btn');
 
+// SVG Icons (Lucide / Heroicons standard, zero emojis)
+const ICON_PLAY = `<svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>`;
+const ICON_PAUSE = `<svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
+const ICON_VOL_ON = `<svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>`;
+const ICON_VOL_MUTE = `<svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>`;
+const ICON_CLOSE = `<svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+
 let countdown = null;
 let currentTitle = 'Unnamed';
 let initialTime = 0;
@@ -50,7 +57,7 @@ function showToast(message) {
     clearTimeout(toastTimeout);
     toastTimeout = setTimeout(() => {
         toastEl.classList.remove('show');
-    }, 3200);
+    }, 3000);
 }
 
 function playAlertSound() {
@@ -58,7 +65,6 @@ function playAlertSound() {
     if (notificationSound) {
         notificationSound.currentTime = 0;
         notificationSound.play().catch(() => {
-            // Fallback Web Audio API chime if audio file fails or autoplay blocked
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
                 const osc = ctx.createOscillator();
@@ -76,7 +82,6 @@ function playAlertSound() {
     }
 }
 
-// Load saved timers from localStorage
 document.addEventListener('DOMContentLoaded', () => {
     renderSavedTimers();
 });
@@ -94,7 +99,7 @@ function renderSavedTimers() {
     savedTimersList.innerHTML = '';
 
     if (timers.length === 0) {
-        const emptyLi = document.createElement('div');
+        const emptyLi = document.createElement('li');
         emptyLi.className = 'empty-state';
         emptyLi.textContent = 'No saved sessions yet. Start a timer or stopwatch to log your history.';
         savedTimersList.appendChild(emptyLi);
@@ -123,7 +128,7 @@ function renderSavedTimers() {
         delBtn.className = 'timer-item-delete';
         delBtn.title = 'Delete entry';
         delBtn.setAttribute('aria-label', `Delete ${item.title}`);
-        delBtn.textContent = '✕';
+        delBtn.innerHTML = ICON_CLOSE;
         delBtn.addEventListener('click', () => {
             deleteTimerAt(index);
         });
@@ -154,6 +159,13 @@ function updateProgress(secondsLeft) {
     timerProgress.style.width = `${pct}%`;
 }
 
+function setPauseButtonState(paused) {
+    if (!pauseBtn) return;
+    pauseBtn.innerHTML = paused
+        ? `${ICON_PLAY}<span>Resume</span>`
+        : `${ICON_PAUSE}<span>Pause</span>`;
+}
+
 function timer(seconds) {
     clearInterval(countdown);
 
@@ -174,13 +186,13 @@ function timer(seconds) {
             clearInterval(countdown);
             countdown = null;
             isPaused = false;
-            pauseBtn.textContent = '⏸ Pause';
+            setPauseButtonState(false);
             displayTimeLeft(0);
             updateProgress(0);
-            if (timerStatus) timerStatus.textContent = 'Completed!';
+            if (timerStatus) timerStatus.textContent = 'Completed';
             playAlertSound();
             saveTimer(currentTitle, `Completed ${formatTime(initialTime)}`);
-            showToast(`⏰ "${currentTitle}" finished!`);
+            showToast(`"${currentTitle}" finished!`);
             currentTimerTitle.textContent = '';
             document.title = 'Countdown Pro & Stopwatch';
             return;
@@ -211,7 +223,7 @@ function startCountdownWithSeconds(seconds, titleText) {
     initialTime = seconds;
     timeLeft = seconds;
     isPaused = false;
-    pauseBtn.textContent = '⏸ Pause';
+    setPauseButtonState(false);
     timer(seconds);
 }
 
@@ -234,7 +246,7 @@ startBtn.addEventListener('click', () => {
     const title = titleInput.value.trim();
 
     if (isNaN(time) || time <= 0) {
-        showToast('⚠️ Please enter a valid positive number for time.');
+        showToast('Please enter a valid positive number for time.');
         timeInput.focus();
         return;
     }
@@ -257,14 +269,14 @@ stopBtn.addEventListener('click', () => {
     if (countdown || isPaused) {
         clearInterval(countdown);
         const elapsedTime = Math.max(0, initialTime - (typeof timeLeft === 'number' ? timeLeft : 0));
-        saveTimer(currentTitle, `Counted ${formatTime(elapsedTime)} / ${formatTime(initialTime)}`);
+        saveTimer(currentTitle, `Counted ${formatTime(elapsedTime)}`);
         timerDisplay.textContent = '00:00:00';
         currentTimerTitle.textContent = '';
         if (timerStatus) timerStatus.textContent = 'Stopped & Saved';
         if (timerProgress) timerProgress.style.width = '0%';
         countdown = null;
         isPaused = false;
-        pauseBtn.textContent = '⏸ Pause';
+        setPauseButtonState(false);
         document.title = 'Countdown Pro & Stopwatch';
         showToast(`Saved "${currentTitle}" to history.`);
     }
@@ -285,12 +297,12 @@ pauseBtn.addEventListener('click', () => {
 
     if (isPaused) {
         isPaused = false;
-        pauseBtn.textContent = '⏸ Pause';
+        setPauseButtonState(false);
         if (timerStatus) timerStatus.textContent = 'Running...';
         timer(timeLeft);
     } else {
         isPaused = true;
-        pauseBtn.textContent = '▶ Resume';
+        setPauseButtonState(true);
         if (timerStatus) timerStatus.textContent = 'Paused';
         clearInterval(countdown);
         countdown = null;
@@ -299,7 +311,10 @@ pauseBtn.addEventListener('click', () => {
 
 muteBtn.addEventListener('click', () => {
     isMuted = !isMuted;
-    muteBtn.textContent = isMuted ? '🔕 Unmute' : '🔔 Mute';
+    muteBtn.innerHTML = isMuted
+        ? `${ICON_VOL_MUTE}<span>Unmute</span>`
+        : `${ICON_VOL_ON}<span>Mute</span>`;
+    muteBtn.setAttribute('aria-pressed', String(isMuted));
     muteBtn.classList.toggle('muted', isMuted);
 });
 
@@ -349,7 +364,7 @@ if (swStartBtn) {
         if (!swRunning) {
             swRunning = true;
             swStartTime = Date.now() - swElapsedMs;
-            swStartBtn.textContent = '⏸ Pause';
+            swStartBtn.innerHTML = `${ICON_PAUSE}<span>Pause</span>`;
             if (swStatus) swStatus.textContent = 'Stopwatch Running...';
             swInterval = setInterval(() => {
                 swElapsedMs = Date.now() - swStartTime;
@@ -358,7 +373,7 @@ if (swStartBtn) {
         } else {
             swRunning = false;
             clearInterval(swInterval);
-            swStartBtn.textContent = '▶ Resume';
+            swStartBtn.innerHTML = `${ICON_PLAY}<span>Resume</span>`;
             if (swStatus) swStatus.textContent = 'Stopwatch Paused';
         }
     });
@@ -370,7 +385,7 @@ if (swLapBtn) {
         swLapCount++;
         const f = formatStopwatch(swElapsedMs);
         saveTimer(`Stopwatch Lap #${swLapCount}`, `${f.main}${f.ms}`);
-        showToast(`🏁 Recorded Lap #${swLapCount}: ${f.main}${f.ms}`);
+        showToast(`Recorded Lap #${swLapCount}: ${f.main}${f.ms}`);
     });
 }
 
@@ -386,7 +401,7 @@ if (swResetBtn) {
         swElapsedMs = 0;
         swLapCount = 0;
         updateStopwatchDisplay();
-        if (swStartBtn) swStartBtn.textContent = '▶ Start';
+        if (swStartBtn) swStartBtn.innerHTML = `${ICON_PLAY}<span>Start</span>`;
         if (swStatus) swStatus.textContent = 'Stopwatch Ready';
     });
 }
@@ -396,12 +411,12 @@ downloadBtn.addEventListener('click', () => {
     const timers = getSavedTimers();
 
     if (timers.length === 0) {
-        showToast('⚠️ No saved timers to download.');
+        showToast('No saved timers to download.');
         return;
     }
 
     if (!window.jspdf || !window.jspdf.jsPDF) {
-        showToast('⚠️ PDF library is still loading. Please try again in a moment.');
+        showToast('PDF library is loading. Please try again in a moment.');
         return;
     }
 
@@ -422,9 +437,9 @@ downloadBtn.addEventListener('click', () => {
     const drawHeader = () => {
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(11);
-        doc.text('No.', col1X, y);
-        doc.text('Session / Timer Name', col2X, y);
-        doc.text('Recorded Time', col3X, y);
+        doc.text('Sr. No.', col1X, y);
+        doc.text('Name', col2X, y);
+        doc.text('Time', col3X, y);
         y += 8;
         doc.setFont('helvetica', 'normal');
     };
@@ -444,5 +459,5 @@ downloadBtn.addEventListener('click', () => {
     });
 
     doc.save('saved-timers.pdf');
-    showToast('📄 Downloaded saved-timers.pdf');
+    showToast('Downloaded saved-timers.pdf');
 });

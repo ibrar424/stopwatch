@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resultDiv.classList.remove('error-msg');
 
         if (!birthDate || !currentDate) {
+            if (typeof window.playUiSfx === 'function') window.playUiSfx('error');
             resultDiv.textContent = 'Please enter valid dates in MM/DD/YYYY format.';
             resultDiv.classList.add('error-msg');
             if (statsGrid) statsGrid.classList.add('hidden');
@@ -58,11 +59,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (birthDate > currentDate) {
+            if (typeof window.playUiSfx === 'function') window.playUiSfx('error');
             resultDiv.textContent = 'Birth date cannot be in the future relative to the target date.';
             resultDiv.classList.add('error-msg');
             if (statsGrid) statsGrid.classList.add('hidden');
             return;
         }
+
+        if (typeof window.playUiSfx === 'function') window.playUiSfx('start');
 
         let ageYears = currentDate.getFullYear() - birthDate.getFullYear();
         let ageMonths = currentDate.getMonth() - birthDate.getMonth();

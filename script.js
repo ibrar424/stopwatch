@@ -41,6 +41,7 @@ let timeLeft = 0;
 let isMuted = false;
 let toastTimeout = null;
 let deferredInstallPrompt = null;
+let audioCtx = null;
 
 // Stopwatch state
 let swInterval = null;
@@ -48,6 +49,81 @@ let swRunning = false;
 let swStartTime = 0;
 let swElapsedMs = 0;
 let swLapCount = 0;
+
+function getAudioContext() {
+    if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+            audioCtx = new AudioContextClass();
+        }
+    }
+    if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
+    }
+    return audioCtx;
+}
+
+// Synthesized UI Sound Effects for all buttons (Start, Pause, Stop, Lap, Tab, Error)
+function playSfx(type) {
+    if (isMuted && type !== 'unmute') return;
+    try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+
+        const playTone = (freq, endFreq, startTime, duration, wave = 'sine', volume = 0.18) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = wave;
+            osc.frequency.setValueAtTime(freq, startTime);
+            if (endFreq && endFreq !== freq) {
+                osc.frequency.exponentialRampToValueAtTime(endFreq, startTime + duration);
+            }
+            gain.gain.setValueAtTime(volume, startTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(startTime);
+            osc.stop(startTime + duration);
+        };
+
+        switch (type) {
+            case 'start':
+                // Ascending energetic two-note chime (C5 -> E5)
+                playTone(523.25, 523.25, now, 0.09, 'sine', 0.2);
+                playTone(659.25, 659.25, now + 0.08, 0.16, 'sine', 0.22);
+                break;
+            case 'pause':
+                // Soft mid-tone step down (A4 -> F4)
+                playTone(440, 440, now, 0.08, 'triangle', 0.18);
+                playTone(349.23, 349.23, now + 0.08, 0.14, 'triangle', 0.18);
+                break;
+            case 'stop':
+                // Crisp descending stop/reset tone (G4 -> C4)
+                playTone(392, 261.63, now, 0.2, 'sine', 0.22);
+                break;
+            case 'lap':
+                // High precision split beep
+                playTone(880, 1046.5, now, 0.11, 'sine', 0.18);
+                break;
+            case 'click':
+            case 'unmute':
+                // Subtle UI button pop
+                playTone(620, 740, now, 0.06, 'sine', 0.14);
+                break;
+            case 'error':
+                // Low alert buzz
+                playTone(220, 196, now, 0.12, 'sawtooth', 0.12);
+                playTone(196, 174.6, now + 0.13, 0.15, 'sawtooth', 0.12);
+                break;
+            default:
+                playTone(580, 580, now, 0.06, 'sine', 0.12);
+        }
+    } catch (_) {}
+}
+
+// Expose globally so theme.js can also trigger button click SFX
+window.playUiSfx = playSfx;
 
 function showToast(message) {
     if (!toastEl) return;
@@ -64,20 +140,11 @@ function playAlertSound() {
     if (notificationSound) {
         notificationSound.currentTime = 0;
         notificationSound.play().catch(() => {
-            try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(880, ctx.currentTime);
-                gain.gain.setValueAtTime(0.2, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-                osc.stop(ctx.currentTime + 0.6);
-            } catch (_) {}
+            playSfx('start');
+            setTimeout(() => playSfx('lap'), 180);
         });
+    } else {
+        playSfx('start');
     }
 }
 
@@ -113,6 +180,7 @@ function initPwaInstallPopup() {
 
     if (installAppBtn) {
         installAppBtn.addEventListener('click', async () => {
+            playSfx('start');
             if (deferredInstallPrompt) {
                 deferredInstallPrompt.prompt();
                 const { outcome } = await deferredInstallPrompt.userChoice;
@@ -135,6 +203,7 @@ function initPwaInstallPopup() {
 
     if (installDismissBtn) {
         installDismissBtn.addEventListener('click', () => {
+            playSfx('click');
             installPopup.classList.add('hidden');
             sessionStorage.setItem('pwaInstallDismissed', '1');
         });
@@ -190,6 +259,7 @@ function renderSavedTimers() {
         delBtn.setAttribute('aria-label', `Delete ${item.title}`);
         delBtn.textContent = '✕';
         delBtn.addEventListener('click', () => {
+            playSfx('stop');
             deleteTimerAt(index);
         });
 
@@ -286,6 +356,7 @@ document.querySelectorAll('.preset-chip').forEach(chip => {
         const secs = parseInt(chip.getAttribute('data-seconds'), 10);
         const label = chip.getAttribute('data-label') || 'Quick Timer';
         if (secs > 0) {
+            playSfx('start');
             const customTitle = titleInput.value.trim() || label;
             startCountdownWithSeconds(secs, customTitle);
             showToast(`Started "${customTitle}"`);
@@ -299,6 +370,7 @@ startBtn.addEventListener('click', () => {
     const title = titleInput.value.trim();
 
     if (isNaN(time) || time <= 0) {
+        playSfx('error');
         showToast('⚠️ Please enter a valid positive number for time.');
         timeInput.focus();
         return;
@@ -313,12 +385,14 @@ startBtn.addEventListener('click', () => {
         seconds = Math.round(time);
     }
 
+    playSfx('start');
     startCountdownWithSeconds(seconds, title || 'Unnamed');
     titleInput.value = '';
     timeInput.value = '';
 });
 
 stopBtn.addEventListener('click', () => {
+    playSfx('stop');
     if (countdown || isPaused) {
         clearInterval(countdown);
         const elapsedTime = Math.max(0, initialTime - (typeof timeLeft === 'number' ? timeLeft : 0));
@@ -340,20 +414,26 @@ stopBtn.addEventListener('click', () => {
 });
 
 clearBtn.addEventListener('click', () => {
+    playSfx('stop');
     localStorage.removeItem('savedTimers');
     renderSavedTimers();
     showToast('Cleared all saved timers.');
 });
 
 pauseBtn.addEventListener('click', () => {
-    if (!countdown && !isPaused) return;
+    if (!countdown && !isPaused) {
+        playSfx('error');
+        return;
+    }
 
     if (isPaused) {
+        playSfx('start');
         isPaused = false;
         pauseBtn.textContent = '⏸ Pause';
         if (timerStatus) timerStatus.textContent = 'Running...';
         timer(timeLeft);
     } else {
+        playSfx('pause');
         isPaused = true;
         pauseBtn.textContent = '▶ Resume';
         if (timerStatus) timerStatus.textContent = 'Paused';
@@ -364,6 +444,9 @@ pauseBtn.addEventListener('click', () => {
 
 muteBtn.addEventListener('click', () => {
     isMuted = !isMuted;
+    if (!isMuted) {
+        playSfx('unmute');
+    }
     muteBtn.textContent = isMuted ? '🔕 Unmute' : '🔔 Mute';
     muteBtn.classList.toggle('muted', isMuted);
 });
@@ -371,6 +454,7 @@ muteBtn.addEventListener('click', () => {
 // Mode Tabs (Countdown vs Stopwatch)
 if (tabCountdown && tabStopwatch) {
     tabCountdown.addEventListener('click', () => {
+        playSfx('click');
         tabCountdown.classList.add('active');
         tabStopwatch.classList.remove('active');
         tabCountdown.setAttribute('aria-selected', 'true');
@@ -380,6 +464,7 @@ if (tabCountdown && tabStopwatch) {
     });
 
     tabStopwatch.addEventListener('click', () => {
+        playSfx('click');
         tabStopwatch.classList.add('active');
         tabCountdown.classList.remove('active');
         tabStopwatch.setAttribute('aria-selected', 'true');
@@ -412,6 +497,7 @@ function updateStopwatchDisplay() {
 if (swStartBtn) {
     swStartBtn.addEventListener('click', () => {
         if (!swRunning) {
+            playSfx('start');
             swRunning = true;
             swStartTime = Date.now() - swElapsedMs;
             swStartBtn.textContent = '⏸ Pause';
@@ -421,6 +507,7 @@ if (swStartBtn) {
                 updateStopwatchDisplay();
             }, 30);
         } else {
+            playSfx('pause');
             swRunning = false;
             clearInterval(swInterval);
             swStartBtn.textContent = '▶ Resume';
@@ -431,7 +518,11 @@ if (swStartBtn) {
 
 if (swLapBtn) {
     swLapBtn.addEventListener('click', () => {
-        if (swElapsedMs <= 0) return;
+        if (swElapsedMs <= 0) {
+            playSfx('error');
+            return;
+        }
+        playSfx('lap');
         swLapCount++;
         const f = formatStopwatch(swElapsedMs);
         saveTimer(`Stopwatch Lap #${swLapCount}`, `${f.main}${f.ms}`);
@@ -441,6 +532,7 @@ if (swLapBtn) {
 
 if (swResetBtn) {
     swResetBtn.addEventListener('click', () => {
+        playSfx('stop');
         if (swElapsedMs > 0) {
             const f = formatStopwatch(swElapsedMs);
             saveTimer('Stopwatch Session', `Total ${f.main}${f.ms}`);
@@ -461,15 +553,18 @@ downloadBtn.addEventListener('click', () => {
     const timers = getSavedTimers();
 
     if (timers.length === 0) {
+        playSfx('error');
         showToast('⚠️ No saved timers to download.');
         return;
     }
 
     if (!window.jspdf || !window.jspdf.jsPDF) {
+        playSfx('error');
         showToast('⚠️ PDF library is still loading. Please try again in a moment.');
         return;
     }
 
+    playSfx('lap');
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();

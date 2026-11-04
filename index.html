@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A modern, precision countdown timer and stopwatch with lap tracking, custom presets, and PDF export.">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230ea5e9%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><circle cx=%2212%22 cy=%2213%22 r=%228%22/><path d=%22M12 9v4l2 2%22/><path d=%22M5 3 2 6%22/><path d=%22m22 6-3-3%22/><path d=%22M6.38 18.7 4 21%22/><path d=%22M17.64 18.67 20 21%22/></svg>">
+    <meta name="description" content="Countdown Pro &amp; Precision Stopwatch — Modern glassmorphic time-tracking suite with circular progress ring, lap splits, and PDF export.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236366f1%22 stroke-width=%222.2%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><circle cx=%2212%22 cy=%2213%22 r=%228%22/><path d=%22M12 9v4l2 2%22/><path d=%22M5 3 2 6%22/><path d=%22m22 6-3-3%22/></svg>">
     <title>Countdown Pro &amp; Stopwatch</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
@@ -28,79 +28,86 @@
     </script>
 </head>
 <body>
+    <!-- Ambient Glassmorphism Background Glow Orbs -->
+    <div class="ambient-bg" aria-hidden="true">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+    </div>
+
     <nav class="main-nav" aria-label="Primary Navigation">
-        <a href="index.html" class="nav-brand">
-            <span id="logo-icon" class="brand-icon" aria-hidden="true">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="13" r="8"></circle>
-                    <path d="M12 9v4l2 2"></path>
-                    <path d="M5 3 2 6"></path>
-                    <path d="m22 6-3-3"></path>
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand">
+                <span id="logo-icon" class="brand-badge" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="13" r="8"></circle>
+                        <path d="M12 9v4l2 2"></path>
+                        <path d="M5 3 2 6"></path>
+                        <path d="m22 6-3-3"></path>
+                    </svg>
+                </span>
+                <span class="brand-text">Countdown<span class="brand-accent">Pro</span></span>
+            </a>
+
+            <div class="nav-links">
+                <a href="index.html" class="active" aria-current="page">Timer Suite</a>
+                <a href="age_calculator.html">Age Calculator</a>
+                <a href="about.html">About</a>
+            </div>
+
+            <button id="theme-toggle-btn" type="button" aria-label="Switch color theme">
+                <svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4"></circle>
+                    <path d="M12 2v2"></path><path d="M12 20v2"></path>
+                    <path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path>
+                    <path d="M2 12h2"></path><path d="M20 12h2"></path>
+                    <path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path>
                 </svg>
-            </span>
-            <span>Countdown Pro</span>
-        </a>
-        <div class="nav-links">
-            <a href="index.html" class="active" aria-current="page">Home</a>
-            <a href="age_calculator.html">Age Calculator</a>
-            <a href="about.html">About</a>
+                <span>Light Mode</span>
+            </button>
         </div>
-        <button id="theme-toggle-btn" type="button" aria-label="Switch color theme">
-            <svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="4"></circle>
-                <path d="M12 2v2"></path><path d="M12 20v2"></path>
-                <path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path>
-                <path d="M2 12h2"></path><path d="M20 12h2"></path>
-                <path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path>
-            </svg>
-            <span>Light Mode</span>
-        </button>
     </nav>
 
     <main class="main-content">
         <div class="workspace-stack">
-            <!-- Primary Timer / Stopwatch Card -->
+            <!-- Primary Timer / Stopwatch Glass Card -->
             <section class="timer-container" aria-label="Timer Controls">
-                <div class="mode-tabs" role="tablist" aria-label="Timer Mode">
-                    <button type="button" class="mode-tab active" id="tab-countdown" role="tab" aria-selected="true" aria-controls="countdown-panel">
-                        <svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M5 22h14"></path><path d="M5 2h14"></path>
-                            <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"></path>
-                            <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path>
-                        </svg>
-                        <span>Countdown</span>
-                    </button>
-                    <button type="button" class="mode-tab" id="tab-stopwatch" role="tab" aria-selected="false" aria-controls="stopwatch-panel">
-                        <svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <line x1="10" x2="14" y1="2" y2="2"></line>
-                            <line x1="12" x2="15" y1="14" y2="11"></line>
-                            <circle cx="12" cy="14" r="8"></circle>
-                        </svg>
-                        <span>Stopwatch</span>
-                    </button>
+                <div class="top-bar-row">
+                    <div class="mode-tabs" role="tablist" aria-label="Timer Mode">
+                        <button type="button" class="mode-tab active" id="tab-countdown" role="tab" aria-selected="true" aria-controls="countdown-panel">
+                            <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M5 22h14"></path><path d="M5 2h14"></path>
+                                <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"></path>
+                                <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path>
+                            </svg>
+                            <span>Countdown</span>
+                        </button>
+                        <button type="button" class="mode-tab" id="tab-stopwatch" role="tab" aria-selected="false" aria-controls="stopwatch-panel">
+                            <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <line x1="10" x2="14" y1="2" y2="2"></line>
+                                <line x1="12" x2="15" y1="14" y2="11"></line>
+                                <circle cx="12" cy="14" r="8"></circle>
+                            </svg>
+                            <span>Stopwatch</span>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Countdown Mode View -->
                 <div id="countdown-panel" role="tabpanel" aria-labelledby="tab-countdown">
-                    <div class="card-heading">
-                        <svg class="heading-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <circle cx="12" cy="13" r="8"></circle>
-                            <path d="M12 9v4l2 2"></path>
-                            <path d="M5 3 2 6"></path>
-                            <path d="m22 6-3-3"></path>
-                        </svg>
+                    <div class="hero-header">
                         <h1>Countdown Pro</h1>
+                        <p class="subtitle">Precision time-tracking for deep work, events, and deadlines.</p>
                     </div>
-                    <p class="subtitle">Your go-to tool for tracking events, tasks, and deadlines.</p>
 
                     <div class="presets-row" aria-label="Quick time presets">
-                        <button type="button" class="preset-chip" data-seconds="60" data-label="1 Min Quick">+ 1m</button>
-                        <button type="button" class="preset-chip" data-seconds="300" data-label="5 Min Break">+ 5m</button>
-                        <button type="button" class="preset-chip" data-seconds="600" data-label="10 Min Task">+ 10m</button>
-                        <button type="button" class="preset-chip" data-seconds="1500" data-label="Pomodoro (25m)">Pomodoro 25m</button>
-                        <button type="button" class="preset-chip" data-seconds="3600" data-label="1 Hour Deep Work">+ 1h</button>
+                        <button type="button" class="preset-chip" data-seconds="60" data-label="1 Min Sprint">+1m</button>
+                        <button type="button" class="preset-chip" data-seconds="300" data-label="5 Min Break">+5m</button>
+                        <button type="button" class="preset-chip" data-seconds="600" data-label="10 Min Focus">+10m</button>
+                        <button type="button" class="preset-chip" data-seconds="1500" data-label="Pomodoro 25m">Pomodoro 25m</button>
+                        <button type="button" class="preset-chip" data-seconds="3600" data-label="1 Hr Deep Work">+1h</button>
                     </div>
 
+                    <!-- Compact Fitted Input & Control Box -->
                     <div class="input-container">
                         <div class="inputs">
                             <input type="text" id="title-input" placeholder="Enter name" aria-label="Timer session name">
@@ -128,11 +135,26 @@
                         </div>
                     </div>
 
-                    <h3 id="current-timer-title" aria-live="polite"></h3>
-
+                    <!-- Digital Dial & Progress Display -->
                     <div class="display-container">
-                        <h2 id="timer-display">00:00:00</h2>
-                        <div id="timer-status" class="timer-status-badge">Ready to start</div>
+                        <div class="dial-ring-wrapper">
+                            <svg class="dial-svg" viewBox="0 0 260 260" aria-hidden="true">
+                                <defs>
+                                    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#38bdf8" />
+                                        <stop offset="50%" stop-color="#6366f1" />
+                                        <stop offset="100%" stop-color="#ec4899" />
+                                    </linearGradient>
+                                </defs>
+                                <circle class="dial-track" cx="130" cy="130" r="116"></circle>
+                                <circle id="dial-progress-circle" class="dial-progress" cx="130" cy="130" r="116"></circle>
+                            </svg>
+                            <div class="dial-center-content">
+                                <h3 id="current-timer-title" aria-live="polite"></h3>
+                                <h2 id="timer-display">00:00:00</h2>
+                                <div id="timer-status" class="timer-status-badge">Ready to start</div>
+                            </div>
+                        </div>
                         <div class="progress-bar-track" role="progressbar" aria-label="Timer progress" aria-valuemin="0" aria-valuemax="100">
                             <div id="timer-progress" class="progress-bar-fill"></div>
                         </div>
@@ -141,15 +163,10 @@
 
                 <!-- Stopwatch Mode View -->
                 <div id="stopwatch-panel" class="hidden" role="tabpanel" aria-labelledby="tab-stopwatch">
-                    <div class="card-heading">
-                        <svg class="heading-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <line x1="10" x2="14" y1="2" y2="2"></line>
-                            <line x1="12" x2="15" y1="14" y2="11"></line>
-                            <circle cx="12" cy="14" r="8"></circle>
-                        </svg>
+                    <div class="hero-header">
                         <h1>Precision Stopwatch</h1>
+                        <p class="subtitle">Centisecond accuracy with instant split-lap recording.</p>
                     </div>
-                    <p class="subtitle">Measure elapsed time and record split laps down to the centisecond.</p>
 
                     <div class="buttons sw-buttons">
                         <button type="button" id="sw-start-btn">
@@ -166,20 +183,23 @@
                         </button>
                     </div>
 
-                    <div class="display-container">
+                    <div class="display-container sw-display-box">
                         <h2 id="stopwatch-display">00:00:00<span id="stopwatch-ms" class="ms-display">.00</span></h2>
                         <div id="stopwatch-status" class="timer-status-badge">Stopwatch Ready</div>
                     </div>
                 </div>
             </section>
 
-            <!-- Saved Timers Card -->
+            <!-- Saved Timers Bento Card -->
             <section class="saved-timers-container" aria-label="Saved Timers History">
                 <div class="saved-timers-header">
-                    <h2>Saved Timers</h2>
+                    <div class="saved-title-group">
+                        <h2>Saved Timers</h2>
+                        <span id="saved-count-badge" class="count-pill">0</span>
+                    </div>
                     <div class="header-actions">
                         <button type="button" id="download-btn" title="Download as PDF" aria-label="Download Saved Timers as PDF">
-                            <svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                 <polyline points="7 10 12 15 17 10"></polyline>
                                 <line x1="12" y1="15" x2="12" y2="3"></line>
@@ -187,7 +207,7 @@
                             <span>Download PDF</span>
                         </button>
                         <button type="button" id="mute-btn" aria-pressed="false">
-                            <svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                                 <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
                                 <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
@@ -195,7 +215,7 @@
                             <span>Mute</span>
                         </button>
                         <button type="button" id="clear-btn">
-                            <svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <path d="M3 6h18"></path>
                                 <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
                                 <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
@@ -213,15 +233,15 @@
     <audio id="notification-sound" src="notification.mp3" preload="auto"></audio>
 
     <footer class="main-footer">
-        <p>
+        <div class="footer-links">
             <a href="index.html">Home</a>
             <a href="age_calculator.html">Age Calculator</a>
             <a href="about.html">About</a>
             <a href="privacy.html">Privacy Policy</a>
             <a href="contact.html">Contact</a>
             <a href="terms.html">Terms</a>
-        </p>
-        <p>© 2026 Stopwatch.name. All rights reserved.</p>
+        </div>
+        <p>© 2026 Stopwatch.name. Crafted with UI/UX Pro Max Design System.</p>
     </footer>
 
     <script src="theme.js"></script>

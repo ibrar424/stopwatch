@@ -8,7 +8,9 @@ const clearBtn = document.getElementById('clear-btn');
 const timerDisplay = document.getElementById('timer-display');
 const timerStatus = document.getElementById('timer-status');
 const timerProgress = document.getElementById('timer-progress');
+const dialCircle = document.getElementById('dial-progress-circle');
 const savedTimersList = document.getElementById('saved-timers-list');
+const savedCountBadge = document.getElementById('saved-count-badge');
 const currentTimerTitle = document.getElementById('current-timer-title');
 const notificationSound = document.getElementById('notification-sound');
 const muteBtn = document.getElementById('mute-btn');
@@ -31,9 +33,11 @@ const swResetBtn = document.getElementById('sw-reset-btn');
 // SVG Icons (Lucide / Heroicons standard, zero emojis)
 const ICON_PLAY = `<svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>`;
 const ICON_PAUSE = `<svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
-const ICON_VOL_ON = `<svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>`;
-const ICON_VOL_MUTE = `<svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>`;
-const ICON_CLOSE = `<svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+const ICON_VOL_ON = `<svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>`;
+const ICON_VOL_MUTE = `<svg class="icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>`;
+const ICON_CLOSE = `<svg class="icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+
+const RING_CIRCUMFERENCE = 2 * Math.PI * 116; // r=116 -> ~728.85
 
 let countdown = null;
 let currentTitle = 'Unnamed';
@@ -84,6 +88,7 @@ function playAlertSound() {
 
 document.addEventListener('DOMContentLoaded', () => {
     renderSavedTimers();
+    updateProgress(0);
 });
 
 function getSavedTimers() {
@@ -97,6 +102,7 @@ function getSavedTimers() {
 function renderSavedTimers() {
     const timers = getSavedTimers();
     savedTimersList.innerHTML = '';
+    if (savedCountBadge) savedCountBadge.textContent = String(timers.length);
 
     if (timers.length === 0) {
         const emptyLi = document.createElement('li');
@@ -154,9 +160,20 @@ function saveTimer(title, time) {
 }
 
 function updateProgress(secondsLeft) {
-    if (!timerProgress || !initialTime || initialTime <= 0) return;
-    const pct = Math.min(100, Math.max(0, ((initialTime - secondsLeft) / initialTime) * 100));
-    timerProgress.style.width = `${pct}%`;
+    if (!initialTime || initialTime <= 0) {
+        if (timerProgress) timerProgress.style.width = '0%';
+        if (dialCircle) dialCircle.style.strokeDashoffset = '0';
+        return;
+    }
+    const elapsedRatio = Math.min(1, Math.max(0, (initialTime - secondsLeft) / initialTime));
+    const remainingRatio = Math.min(1, Math.max(0, secondsLeft / initialTime));
+    if (timerProgress) {
+        timerProgress.style.width = `${elapsedRatio * 100}%`;
+    }
+    if (dialCircle) {
+        const offset = RING_CIRCUMFERENCE * (1 - remainingRatio);
+        dialCircle.style.strokeDashoffset = `${offset}`;
+    }
 }
 
 function setPauseButtonState(paused) {
@@ -273,7 +290,8 @@ stopBtn.addEventListener('click', () => {
         timerDisplay.textContent = '00:00:00';
         currentTimerTitle.textContent = '';
         if (timerStatus) timerStatus.textContent = 'Stopped & Saved';
-        if (timerProgress) timerProgress.style.width = '0%';
+        initialTime = 0;
+        updateProgress(0);
         countdown = null;
         isPaused = false;
         setPauseButtonState(false);

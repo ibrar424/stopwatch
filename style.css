@@ -1,30 +1,33 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&family=Outfit:wght@600;700;800&display=swap');
 
 :root {
-    --bg-primary: #0f172a;
-    --bg-secondary: #1e293b;
-    --surface-card: #192134;
-    --surface-elevated: #243049;
-    --surface-input: #0f172a;
-    --border-subtle: rgba(255, 255, 255, 0.1);
+    /* Three-Layer Token System (UI/UX Pro Max) */
+    --bg-primary: #070b14;
+    --bg-secondary: #0f172a;
+    --surface-card: rgba(19, 28, 49, 0.78);
+    --surface-elevated: rgba(30, 41, 69, 0.85);
+    --surface-input: rgba(10, 15, 29, 0.85);
+    --border-subtle: rgba(148, 163, 184, 0.14);
+    --border-highlight: rgba(255, 255, 255, 0.08);
     --border-focus: #38bdf8;
-    --text-primary: #ffffff;
+    --text-primary: #f8fafc;
     --text-secondary: #cbd5e1;
     --text-muted: #94a3b8;
-    --accent-primary: #0284c7;
-    --accent-hover: #0369a1;
+    --accent-primary: #4f46e5;
+    --accent-hover: #4338ca;
     --accent-text: #38bdf8;
-    --accent-gradient: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
-    --btn-start: #0284c7;
-    --btn-start-hover: #0369a1;
+    --accent-gradient: linear-gradient(135deg, #38bdf8 0%, #6366f1 55%, #ec4899 100%);
+    --btn-start: linear-gradient(135deg, #0284c7 0%, #4f46e5 100%);
+    --btn-start-hover: linear-gradient(135deg, #0369a1 0%, #4338ca 100%);
     --btn-pause: #f59e0b;
     --btn-pause-hover: #fbbf24;
     --btn-pause-text: #0f172a;
-    --btn-stop: #dc2626;
-    --btn-stop-hover: #b91c1c;
-    --shadow-lg: 0 20px 44px rgba(2, 6, 23, 0.55);
-    --radius-xl: 20px;
-    --radius-lg: 14px;
+    --btn-stop: #e11d48;
+    --btn-stop-hover: #be123c;
+    --dial-track: rgba(148, 163, 184, 0.12);
+    --shadow-card: 0 24px 60px -12px rgba(0, 0, 0, 0.65), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+    --radius-2xl: 24px;
+    --radius-xl: 18px;
     --radius-md: 10px;
     --radius-sm: 8px;
     --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -33,18 +36,20 @@
 body.light-mode {
     --bg-primary: #f1f5f9;
     --bg-secondary: #e2e8f0;
-    --surface-card: #ffffff;
+    --surface-card: rgba(255, 255, 255, 0.88);
     --surface-elevated: #f1f5f9;
     --surface-input: #f8fafc;
-    --border-subtle: #cbd5e1;
+    --border-subtle: rgba(15, 23, 42, 0.12);
+    --border-highlight: rgba(255, 255, 255, 0.9);
     --border-focus: #0284c7;
     --text-primary: #0f172a;
     --text-secondary: #334155;
     --text-muted: #475569;
     --accent-primary: #0284c7;
     --accent-hover: #0369a1;
-    --accent-text: #0369a1;
-    --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.08);
+    --accent-text: #0284c7;
+    --dial-track: rgba(15, 23, 42, 0.08);
+    --shadow-card: 0 20px 45px -15px rgba(15, 23, 42, 0.1), inset 0 1px 0 0 #ffffff;
 }
 
 *,
@@ -64,12 +69,46 @@ body {
     min-height: 100vh;
     margin: 0;
     background-color: var(--bg-primary);
-    background-image:
-        radial-gradient(at 15% 10%, rgba(56, 189, 248, 0.08) 0px, transparent 45%),
-        radial-gradient(at 85% 85%, rgba(37, 99, 235, 0.08) 0px, transparent 45%);
     color: var(--text-primary);
     transition: background-color var(--transition), color var(--transition);
     overflow-x: hidden;
+    position: relative;
+}
+
+/* Ambient Aurora Glow Orbs */
+.ambient-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.glow-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.28;
+}
+
+body.light-mode .glow-orb {
+    opacity: 0.16;
+}
+
+.orb-1 {
+    width: 420px;
+    height: 420px;
+    background: #38bdf8;
+    top: -120px;
+    left: -100px;
+}
+
+.orb-2 {
+    width: 460px;
+    height: 460px;
+    background: #6366f1;
+    bottom: -140px;
+    right: -100px;
 }
 
 /* Visible Keyboard Focus Rings (WCAG 2.2 AA) */
@@ -87,62 +126,85 @@ select:focus-visible {
     vertical-align: middle;
 }
 
-/* Navigation Bar */
+/* Glassmorphic Sticky Navbar */
 .main-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 14px 32px;
-    background: var(--surface-card);
-    border-bottom: 1px solid var(--border-subtle);
     width: 100%;
+    background: var(--surface-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-subtle);
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.nav-inner {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
 }
 
 .nav-brand {
     display: inline-flex;
     align-items: center;
     gap: 10px;
+    font-family: 'Outfit', sans-serif;
     font-weight: 800;
-    font-size: 1.15rem;
+    font-size: 1.25rem;
     color: var(--text-primary);
     text-decoration: none;
     letter-spacing: -0.02em;
 }
 
-.brand-icon {
+.brand-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--btn-start);
+    color: #ffffff;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: var(--accent-text);
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
+}
+
+.brand-accent {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-left: 2px;
 }
 
 .nav-links {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+    background: var(--surface-input);
+    padding: 4px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
 }
 
 .nav-links a {
     color: var(--text-secondary);
-    padding: 8px 16px;
+    padding: 6px 14px;
     border-radius: var(--radius-sm);
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.94rem;
+    font-size: 0.88rem;
     transition: background-color var(--transition), color var(--transition);
 }
 
-.nav-links a:hover,
-.nav-links a.active {
-    background: var(--surface-elevated);
+.nav-links a:hover {
     color: var(--text-primary);
 }
 
 .nav-links a.active {
+    background: var(--surface-elevated);
     color: var(--accent-text);
 }
 
@@ -151,32 +213,34 @@ select:focus-visible {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    height: 40px;
-    padding: 0 16px;
+    height: 38px;
+    padding: 0 14px;
     border-radius: var(--radius-sm);
-    border: none;
-    background: var(--accent-primary);
-    color: #ffffff;
-    font-size: 0.9rem;
+    border: 1px solid var(--border-subtle);
+    background: var(--surface-elevated);
+    color: var(--text-primary);
+    font-size: 0.86rem;
     font-weight: 600;
     font-family: inherit;
     cursor: pointer;
-    transition: background-color var(--transition), box-shadow var(--transition);
+    transition: background-color var(--transition), border-color var(--transition);
 }
 
 #theme-toggle-btn:hover {
-    background: var(--accent-hover);
+    border-color: var(--border-focus);
 }
 
 /* Main Content Layout */
 .main-content {
     width: 100%;
-    max-width: 640px;
-    padding: 36px 20px;
+    max-width: 620px;
+    padding: 32px 18px 48px;
     display: flex;
     flex-direction: column;
     align-items: center;
     flex: 1;
+    position: relative;
+    z-index: 1;
 }
 
 .workspace-stack {
@@ -186,14 +250,16 @@ select:focus-visible {
     width: 100%;
 }
 
-/* Card Containers */
+/* Glassmorphism Bento Card Containers */
 .timer-container,
 .saved-timers-container,
 .content-card {
     background: var(--surface-card);
-    padding: 32px;
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 32px 28px;
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-card);
     width: 100%;
     border: 1px solid var(--border-subtle);
     transition: background-color var(--transition), border-color var(--transition);
@@ -205,7 +271,7 @@ select:focus-visible {
 
 .saved-timers-container {
     text-align: left;
-    padding: 28px 32px;
+    padding: 26px 28px;
 }
 
 .content-card {
@@ -215,12 +281,14 @@ select:focus-visible {
 }
 
 .content-card h1 {
+    font-family: 'Outfit', sans-serif;
     font-size: 2rem;
     margin-top: 0;
     color: var(--text-primary);
 }
 
 .content-card h2 {
+    font-family: 'Outfit', sans-serif;
     color: var(--text-primary);
     margin-top: 24px;
     margin-bottom: 10px;
@@ -242,14 +310,19 @@ select:focus-visible {
     text-decoration: underline;
 }
 
-/* Mode Switcher Tabs */
+/* Mode Switcher Pill Tabs */
+.top-bar-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
 .mode-tabs {
     display: inline-flex;
     background: var(--surface-input);
     padding: 4px;
-    border-radius: var(--radius-md);
+    border-radius: 999px;
     border: 1px solid var(--border-subtle);
-    margin-bottom: 20px;
     gap: 4px;
 }
 
@@ -257,14 +330,14 @@ select:focus-visible {
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    height: 36px;
+    height: 34px;
     padding: 0 18px;
-    border-radius: var(--radius-sm);
+    border-radius: 999px;
     border: none;
     background: transparent;
     color: var(--text-secondary);
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.86rem;
     font-family: inherit;
     cursor: pointer;
     transition: background-color var(--transition), color var(--transition);
@@ -275,26 +348,18 @@ select:focus-visible {
 }
 
 .mode-tab.active {
-    background: var(--accent-primary);
+    background: var(--btn-start);
     color: #ffffff;
 }
 
-.card-heading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 8px;
-}
-
-.heading-icon {
-    color: var(--accent-text);
-    flex-shrink: 0;
+.hero-header {
+    margin-bottom: 16px;
 }
 
 h1 {
-    margin: 0;
-    font-size: 2.1rem;
+    font-family: 'Outfit', sans-serif;
+    margin: 0 0 6px 0;
+    font-size: 2rem;
     font-weight: 800;
     color: var(--text-primary);
     letter-spacing: -0.025em;
@@ -302,8 +367,8 @@ h1 {
 
 .subtitle {
     color: var(--text-secondary);
-    margin: 0 0 20px 0;
-    font-size: 0.95rem;
+    margin: 0;
+    font-size: 0.92rem;
 }
 
 /* Quick Presets */
@@ -312,17 +377,17 @@ h1 {
     flex-wrap: wrap;
     justify-content: center;
     gap: 8px;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
 }
 
 .preset-chip {
-    height: 32px;
-    padding: 0 13px;
+    height: 30px;
+    padding: 0 12px;
     border-radius: 999px;
     border: 1px solid var(--border-subtle);
     background: var(--surface-elevated);
     color: var(--text-secondary);
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     font-weight: 600;
     font-family: inherit;
     cursor: pointer;
@@ -339,16 +404,16 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 14px;
-    margin-bottom: 16px;
+    gap: 12px;
+    margin-bottom: 20px;
 }
 
 .inputs {
     display: grid;
-    grid-template-columns: 1.3fr 0.85fr 0.85fr;
-    gap: 10px;
+    grid-template-columns: 1.25fr 0.85fr 0.9fr;
+    gap: 8px;
     width: 100%;
-    max-width: 440px;
+    max-width: 420px;
     margin: 0 auto;
     align-items: center;
 }
@@ -356,11 +421,11 @@ h1 {
 #title-input,
 #time-input,
 #time-unit {
-    height: 38px;
+    height: 36px;
     padding: 0 12px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-subtle);
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     font-family: inherit;
     background: var(--surface-input);
     color: var(--text-primary);
@@ -372,7 +437,7 @@ h1 {
 #title-input::placeholder,
 #time-input::placeholder {
     color: var(--text-muted);
-    font-size: 0.86rem;
+    font-size: 0.84rem;
 }
 
 #title-input:focus,
@@ -380,16 +445,16 @@ h1 {
 #time-unit:focus {
     outline: none;
     border-color: var(--border-focus);
-    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.22);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
 }
 
-/* Action Button Boxes */
+/* Compact Action Button Boxes */
 .buttons {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    gap: 8px;
     width: 100%;
-    max-width: 360px;
+    max-width: 340px;
     margin: 0 auto;
 }
 
@@ -403,15 +468,15 @@ h1 {
 #sw-start-btn,
 #sw-lap-btn,
 #sw-reset-btn {
-    height: 40px;
-    padding: 0 16px;
+    height: 38px;
+    padding: 0 14px;
     border-radius: var(--radius-sm);
     border: none;
-    font-size: 0.92rem;
+    font-size: 0.88rem;
     font-weight: 700;
     font-family: inherit;
     cursor: pointer;
-    transition: background-color var(--transition), box-shadow var(--transition), opacity var(--transition);
+    transition: filter var(--transition), opacity var(--transition);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -428,6 +493,7 @@ h1 {
 #start-btn:hover,
 #sw-start-btn:hover {
     background: var(--btn-start-hover);
+    filter: brightness(1.08);
 }
 
 #pause-btn,
@@ -439,7 +505,6 @@ h1 {
 #pause-btn:hover,
 #sw-lap-btn:hover {
     background: var(--btn-pause-hover);
-    color: var(--btn-pause-text);
 }
 
 #stop-btn,
@@ -453,27 +518,111 @@ h1 {
     background: var(--btn-stop-hover);
 }
 
-#current-timer-title {
-    min-height: 22px;
-    margin: 4px 0;
-    font-size: 1.15rem;
-    color: var(--accent-text);
-    font-weight: 700;
-}
-
-/* Timer Display Box */
+/* Circular SVG Progress Dial & Display Box */
 .display-container {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 8px;
-    padding: 26px 20px;
-    border-radius: var(--radius-lg);
+    padding: 20px;
+    border-radius: var(--radius-xl);
     background: var(--surface-input);
     border: 1px solid var(--border-subtle);
     overflow: hidden;
+}
+
+.sw-display-box {
+    padding: 40px 20px;
+}
+
+.dial-ring-wrapper {
+    position: relative;
+    width: 240px;
+    height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dial-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.dial-track {
+    fill: none;
+    stroke: var(--dial-track);
+    stroke-width: 8;
+}
+
+.dial-progress {
+    fill: none;
+    stroke: url(#ringGrad);
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 728.85;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.25s linear;
+}
+
+.dial-center-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+}
+
+#current-timer-title {
+    min-height: 20px;
+    margin: 0 0 4px 0;
+    font-size: 0.92rem;
+    color: var(--accent-text);
+    font-weight: 700;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#timer-display,
+#stopwatch-display {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2.55rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin: 0;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+}
+
+#stopwatch-display {
+    font-size: 3.6rem;
+}
+
+.ms-display {
+    font-size: 1.5rem;
+    color: var(--accent-text);
+    margin-left: 3px;
+}
+
+.timer-status-badge {
+    margin-top: 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    background: var(--surface-elevated);
+    padding: 3px 10px;
+    border-radius: 999px;
 }
 
 .progress-bar-track {
@@ -482,7 +631,7 @@ h1 {
     left: 0;
     width: 100%;
     height: 4px;
-    background: rgba(148, 163, 184, 0.15);
+    background: rgba(148, 163, 184, 0.12);
 }
 
 .progress-bar-fill {
@@ -492,50 +641,46 @@ h1 {
     transition: width 0.25s linear;
 }
 
-#timer-display,
-#stopwatch-display {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 4.25rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    margin: 0;
-    color: var(--text-primary);
-    font-variant-numeric: tabular-nums;
-    line-height: 1.05;
-}
-
-.ms-display {
-    font-size: 1.75rem;
-    color: var(--accent-text);
-    margin-left: 4px;
-}
-
-.timer-status-badge {
-    margin-top: 10px;
-    font-size: 0.78rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
-}
-
 /* Saved Timers Header & Download Arrow Button Box */
 .saved-timers-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
     padding-bottom: 14px;
     border-bottom: 1px solid var(--border-subtle);
     gap: 12px;
     flex-wrap: wrap;
 }
 
+.saved-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .saved-timers-header h2 {
+    font-family: 'Outfit', sans-serif;
     margin: 0;
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     font-weight: 700;
     color: var(--text-primary);
+}
+
+.count-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 999px;
+    background: var(--surface-elevated);
+    border: 1px solid var(--border-subtle);
+    color: var(--accent-text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.76rem;
+    font-weight: 700;
 }
 
 .header-actions {
@@ -548,10 +693,10 @@ h1 {
 #download-btn,
 #mute-btn,
 #clear-btn {
-    height: 38px;
-    padding: 0 14px;
+    height: 36px;
+    padding: 0 13px;
     border-radius: var(--radius-sm);
-    font-size: 0.88rem;
+    font-size: 0.84rem;
     font-weight: 600;
     font-family: inherit;
     cursor: pointer;
@@ -559,18 +704,18 @@ h1 {
     align-items: center;
     justify-content: center;
     gap: 6px;
-    transition: background-color var(--transition), border-color var(--transition), color var(--transition);
+    transition: background-color var(--transition), border-color var(--transition), filter var(--transition);
     white-space: nowrap;
 }
 
 #download-btn {
-    background: var(--accent-primary);
+    background: var(--btn-start);
     color: #ffffff;
     border: none;
 }
 
 #download-btn:hover {
-    background: var(--accent-hover);
+    filter: brightness(1.1);
 }
 
 #mute-btn {
@@ -584,7 +729,7 @@ h1 {
 }
 
 #mute-btn.muted {
-    background: rgba(2, 132, 199, 0.2);
+    background: rgba(56, 189, 248, 0.16);
     border-color: var(--border-focus);
     color: var(--accent-text);
 }
@@ -604,18 +749,18 @@ h1 {
     list-style: none;
     padding: 0;
     margin: 0;
-    max-height: 340px;
+    max-height: 320px;
     overflow-y: auto;
 }
 
 #saved-timers-list li {
     background: var(--surface-input);
-    padding: 12px 16px;
+    padding: 11px 15px;
     border-radius: var(--radius-sm);
     margin-bottom: 8px;
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     border: 1px solid var(--border-subtle);
-    border-left: 4px solid var(--accent-primary);
+    border-left: 3px solid var(--border-focus);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -631,8 +776,9 @@ h1 {
     border: 1px dashed var(--border-subtle);
     justify-content: center;
     text-align: center;
-    padding: 24px 16px;
+    padding: 22px 16px;
     color: var(--text-muted);
+    font-size: 0.88rem;
 }
 
 .timer-item-info {
@@ -649,7 +795,7 @@ h1 {
 
 .timer-item-time {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.9rem;
+    font-size: 0.86rem;
     color: var(--text-secondary);
 }
 
@@ -658,8 +804,8 @@ h1 {
     border: 1px solid transparent;
     color: var(--text-muted);
     cursor: pointer;
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -668,9 +814,9 @@ h1 {
 }
 
 .timer-item-delete:hover {
-    color: #ef4444;
-    background: rgba(239, 68, 68, 0.12);
-    border-color: rgba(239, 68, 68, 0.25);
+    color: #f43f5e;
+    background: rgba(244, 63, 94, 0.12);
+    border-color: rgba(244, 63, 94, 0.25);
 }
 
 /* Toast Notification */
@@ -679,13 +825,14 @@ h1 {
     bottom: 24px;
     right: 24px;
     background: var(--surface-card);
+    backdrop-filter: blur(16px);
     border: 1px solid var(--border-focus);
     color: var(--text-primary);
     padding: 12px 18px;
     border-radius: var(--radius-sm);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-card);
     font-weight: 600;
-    font-size: 0.92rem;
+    font-size: 0.9rem;
     transform: translateY(120%);
     opacity: 0;
     transition: transform var(--transition), opacity var(--transition);
@@ -702,27 +849,38 @@ h1 {
     text-align: center;
     padding: 24px 20px;
     background: var(--surface-card);
+    backdrop-filter: blur(16px);
     border-top: 1px solid var(--border-subtle);
     width: 100%;
     margin-top: auto;
+    position: relative;
+    z-index: 1;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 8px;
 }
 
 .main-footer a {
-    color: var(--accent-text);
-    margin: 0 10px;
+    color: var(--text-secondary);
     text-decoration: none;
     font-weight: 500;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
+    transition: color var(--transition);
 }
 
 .main-footer a:hover {
-    text-decoration: underline;
+    color: var(--accent-text);
 }
 
 .main-footer p {
-    margin: 6px 0;
+    margin: 4px 0 0;
     color: var(--text-muted);
-    font-size: 0.86rem;
+    font-size: 0.82rem;
 }
 
 .hidden {
@@ -743,16 +901,15 @@ h1 {
 
 /* Responsive Mobile Layout (375px - 640px) */
 @media (max-width: 640px) {
-    .main-nav {
-        padding: 12px 16px;
+    .nav-inner {
+        padding: 10px 14px;
         flex-wrap: wrap;
-        gap: 10px;
     }
 
     .timer-container,
     .saved-timers-container,
     .content-card {
-        padding: 24px 16px;
+        padding: 22px 16px;
     }
 
     .inputs {
@@ -780,9 +937,8 @@ h1 {
         height: 44px;
     }
 
-    #timer-display,
     #stopwatch-display {
-        font-size: 2.6rem;
+        font-size: 2.5rem;
     }
 
     .saved-timers-header {

@@ -8,7 +8,9 @@
 
 .age-calculator {
     background: var(--surface-card);
-    padding: 36px 32px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 40px;
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-lg);
     border: 1px solid var(--border-subtle);
@@ -20,8 +22,8 @@
 .date-inputs-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin-bottom: 18px;
+    gap: 16px;
+    margin-bottom: 20px;
 }
 
 .input-group {
@@ -31,57 +33,57 @@
 .input-group label {
     display: block;
     color: var(--text-secondary);
-    font-size: 0.88rem;
+    font-size: 0.9rem;
     font-weight: 600;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }
 
 .input-group input {
     width: 100%;
-    height: 42px;
-    padding: 0 14px;
+    padding: 14px 16px;
     border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     background: var(--surface-input);
     color: var(--text-primary);
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-family: inherit;
-    transition: border-color var(--transition), box-shadow var(--transition);
+    transition: all var(--transition);
 }
 
 .input-group input:focus {
     outline: none;
     border-color: var(--border-focus);
-    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.22);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
 }
 
 #calculate-btn {
     width: 100%;
-    height: 44px;
-    padding: 0 20px;
+    padding: 15px;
     border: none;
-    border-radius: var(--radius-sm);
-    background: var(--accent-primary);
+    border-radius: var(--radius-md);
+    background: var(--accent-gradient);
     color: #ffffff;
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: 700;
     font-family: inherit;
     cursor: pointer;
-    transition: background-color var(--transition);
+    box-shadow: 0 8px 20px -4px rgba(56, 189, 248, 0.45);
+    transition: all var(--transition);
 }
 
 #calculate-btn:hover {
-    background: var(--accent-hover);
+    transform: translateY(-2px);
+    filter: brightness(1.08);
 }
 
 #result {
-    margin-top: 20px;
-    padding: 18px;
-    border-radius: var(--radius-md);
+    margin-top: 24px;
+    padding: 20px;
+    border-radius: var(--radius-lg);
     background: var(--surface-input);
     border: 1px solid var(--border-subtle);
     color: var(--text-primary);
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     font-weight: 600;
     line-height: 1.5;
 }
@@ -95,14 +97,14 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
-    margin-top: 14px;
+    margin-top: 16px;
 }
 
 .stat-box {
     background: var(--surface-input);
     border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-sm);
-    padding: 14px;
+    border-radius: var(--radius-md);
+    padding: 16px;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -110,13 +112,13 @@
 
 .stat-value {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 1.35rem;
+    font-size: 1.4rem;
     font-weight: 700;
-    color: var(--accent-text);
+    color: var(--accent-primary);
 }
 
 .stat-label {
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -130,6 +132,6 @@
     }
 
     .age-calculator {
-        padding: 24px 16px;
+        padding: 24px 18px;
     }
 }
